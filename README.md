@@ -1,212 +1,282 @@
-# knex API Rest full
-O Knex é um poderoso construtor de consultas SQL para Node.js, que oferece uma maneira elegante e fluente de interagir com o banco de dados. Ele suporta vários bancos de dados, incluindo PostgreSQL, MySQL, SQLite e outros, tornando-o uma escolha popular para aplicativos Node.js que exigem acesso ao banco de dados.
+# Express REST API with Knex, SQLite, and API Versioning
 
-## Criando uma aplicação Express com Knex
-Aqui está um guia passo a passo para criar uma aplicação Express utilizando o Knex para acessar um banco de dados. Certifique-se de que o Node.js já está instalado em seu sistema.
+![Project Type](https://img.shields.io/badge/Project%20Type-Backend%20Learning%20Case%20Study-purple)
+![Backend](https://img.shields.io/badge/Backend-Node.js-green)
+![Framework](https://img.shields.io/badge/Framework-Express-black)
+![Database](https://img.shields.io/badge/Database-SQLite-blue)
+![Query Builder](https://img.shields.io/badge/Query%20Builder-Knex-orange)
+![API](https://img.shields.io/badge/API-REST-red)
+![Versioning](https://img.shields.io/badge/Versioning-v1%20%26%20v2-purple)
+![Status](https://img.shields.io/badge/Status-Learning%20Project-blue)
 
-Crie a estrutura inicial da aplicação Express até o passo 9 do repositório do GitHub (https://github.com/Thiago771414/Express).
+A backend learning project that demonstrates how to build a **REST API with Express.js**, evolve it from **in-memory data** to **persistent SQLite storage**, and organize database access using **Knex**, **migrations**, and **seeds**.
 
-Na pasta "routes" da aplicação Express, crie uma cópia do arquivo "index.js" e renomeie essa cópia para "apiRouterV1.js". Em seguida, adicione o código a seguir no arquivo "apiRouterV1.js":
-````javascript
-const express = require('express');
-const apiRouterV1 = express.Router();
+This repository is designed as a practical example of how a simple CRUD API can gradually become more structured and closer to a real backend application.
 
-const produtos = [
-  {"id": 1, "descricao": "camiseta", "marca": "Nike", "preco": 49.99},
-  {"id": 2, "descricao": "calça jeans", "marca": "Levi's", "preco": 89.95},
-  {"id": 3, "descricao": "tênis esportivo", "marca": "Adidas", "preco": 79.50},
-  {"id": 4, "descricao": "vestido floral", "marca": "Zara", "preco": 59.99},
-  {"id": 5, "descricao": "moletom com capuz", "marca": "Puma", "preco": 69.75},
-  {"id": 6, "descricao": "boné", "marca": "New Era", "preco": 29.99},
-  {"id": 7, "descricao": "bolsa de couro", "marca": "Michael Kors", "preco": 149.00},
-  {"id": 8, "descricao": "óculos de sol", "marca": "Ray-Ban", "preco": 119.50},
-  {"id": 9, "descricao": "shorts jeans", "marca": "Guess", "preco": 54.95},
-  {"id": 10, "descricao": "jaqueta de couro", "marca": "Harley Davidson", "preco": 199.99}
-];
+---
 
-apiRouterV1.get('/produtos', function(req, res, next) {
-    res.json(produtos);
-});
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Thiago771414/imagensProjetos/main/slices/mobile/restAPIversioningKnex.png" width="900">
+</p>
 
-module.exports = apiRouterV1;
-````
-Execute o comando npm install para instalar os módulos necessários.
+---
 
-Inicie o servidor com o comando npm start ou node app.js e verifique se a aplicação está sendo executada em localhost:3000.
+# Case Study
 
-Se ocorrer algum erro relacionado ao pacote "cookie-parser", navegue até a pasta da aplicação e instale o pacote com o comando npm install cookie-parser.
+## Problem
 
-No arquivo "app.js", configure a nova rota para produtos, adicionando as seguintes linhas de código:
+When learning backend development with Node.js, many projects start with hardcoded arrays and simple route handlers.
 
-````javascript
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+While this is useful for understanding the basics, it does not reflect how real applications handle:
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
-var apiRouterV1 = require('./routes/apiRouterV1');
+- persistent data storage
+- schema evolution
+- repeatable database setup
+- API versioning
+- maintainable database access
 
-var app = express();
+As the application grows, using only in-memory data quickly becomes limited and difficult to scale.
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+---
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+## Solution
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/api/v1', apiRouterV1)
+This project demonstrates a step-by-step evolution of an Express API:
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
+- **Version 1** uses in-memory product data for fast CRUD development
+- **Version 2** replaces hardcoded data with **SQLite + Knex**
+- **Knex migrations** define the database schema
+- **Knex seeds** populate initial data
+- the API remains versioned to illustrate progressive backend design
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+This approach helps developers understand both the simplicity of early API development and the transition to a more realistic persistence layer.
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+---
 
-module.exports = app;
-````
-Adicione o seguinte trecho de código no arquivo "apiRouterV1.js" para implementar um novo endpoint que permite buscar um produto pelo seu ID:
-````javascript
-var express = require('express');
-var apiRouterV1 = express.Router();
+## Business / Learning Value
 
-var produtos = [
-  {"id": 1, "descricao": "camiseta", "marca": "Nike", "preco": 49.99},
-  {"id": 2, "descricao": "calça jeans", "marca": "Levi's", "preco": 89.95},
-  {"id": 3, "descricao": "tênis esportivo", "marca": "Adidas", "preco": 79.50},
-  {"id": 4, "descricao": "vestido floral", "marca": "Zara", "preco": 59.99},
-  {"id": 5, "descricao": "moletom com capuz", "marca": "Puma", "preco": 69.75},
-  {"id": 6, "descricao": "boné", "marca": "New Era", "preco": 29.99},
-  {"id": 7, "descricao": "bolsa de couro", "marca": "Michael Kors", "preco": 149.00},
-  {"id": 8, "descricao": "óculos de sol", "marca": "Ray-Ban", "preco": 119.50},
-  {"id": 9, "descricao": "shorts jeans", "marca": "Guess", "preco": 54.95},
-  {"id": 10, "descricao": "jaqueta de couro", "marca": "Harley Davidson", "preco": 199.99}
-]
+This project is useful for developers who want to understand:
 
-apiRouterV1.get('/produtos', function(req, res, next) {
-    res.json(produtos)
-});
+- how REST APIs are structured in Express
+- how CRUD operations work in practice
+- how to use Knex with SQLite
+- how migrations and seeds improve repeatability
+- how API versioning can support incremental evolution
+- how to replace mock data with real database access
 
-apiRouterV1.get('/produtos/:id', function(req, res, next) {
-  let id = req.params.id;
-  if (id) {
-    let idInt = Number.parseInt(id)
-    let idx = produtos.findIndex(o => o.id === idInt)
-    if (idx > -1) {
-      res.json(produtos[idx])
-    }
-    else{
-      res.status(404).json({ message: `Produto não encontrado`})
-    }
-  }
-  else{
-    res.status(404).json({ message: `Produto não encontrado`})
-  }
-});
+It is especially valuable as a learning bridge between **basic Express routing** and **real-world backend persistence patterns**.
 
-module.exports = apiRouterV1;
-````
-Utilize uma extensão cliente HTTP, como o "Thunder Client" (https://github.com/Thiago771414/Express), para testar o endpoint criado. Por exemplo, acesse a URL http://localhost:3000/api/v1/produtos/1 para buscar o produto com o ID igual a 1.
+---
 
-Adicione o seguinte trecho de código no arquivo "apiRouterV1.js" para implementar um novo endpoint que permite criar um produto.
-````javascript
-apiRouterV1.post('/produtos', function(req, res, next) {
-   let produto = req.body
-   let newId = Math.max(...produtos.map(o => o.id)) + 1
-   produto.id = newId
-   produtos.push (produto)
-   res.status(201).json({message: `Produto inserido com sucesso`,
-                         data: {id: newId}})
-});
-````
-Adicione o seguinte trecho de código no arquivo "apiRouterV1.js" para implementar um novo endpoint que permite deletar um produto.
-````javascript
-apiRouterV1.delete('/produtos/:id', function(req, res, next) {
-  let id = req.params.id;
-  if (id) {
-    let idInt = Number.parseInt(id)
-    let idx = produtos.findIndex(o => o.id === idInt)
-    if (idx > -1) {
-      produtos.splice (idx, 1)
-      res.status(200).json({message: `Produto excluído com sucesso!`})
-    }
-    else{
-      res.status(404).json({ message: `Produto não encontrado`})
-    }
-  }
-  else{
-    res.status(404).json({ message: `Produto não encontrado`})
-  }
-});
-````
-Adicione o seguinte trecho de código no arquivo "apiRouterV1.js" para implementar um novo endpoint que permite atualizar um produto.
-````javascript
-apiRouterV1.put('/produtos/:id', function(req, res, next) {
-  let id = req.params.id;
-  let produto = req.body
-  if (id) {
-    let idInt = Number.parseInt(id)
-    let idx = produtos.findIndex(o => o.id === idInt)
-    if (idx > -1) {
-      produtos[idx].descricao = produto.descricao
-      produtos[idx].marca = produto.marca
-      produtos[idx].preco = produto.preco
+# Architecture
 
-      res.status(200).json({message: `Produto atualizado com sucesso!`, data: {produto: produtos[idx]}})
-    }
-    else{
-      res.status(404).json({ message: `Produto não encontrado`})
-    }
-  }
-  else{
-    res.status(404).json({ message: `Produto não encontrado`})
-  }
-});
-````
-## Instalação e Configuração do Knex
-Instale o Knex e o banco de dados SQLite:
-````javascript
+The project follows a simple backend architecture with versioned routes and a SQLite persistence layer.
+
+```text
+Client / HTTP Tool
+        │
+        ▼
+Express Application
+        │
+        ├── /api/v1  → In-memory product API
+        │
+        └── /api/v2  → Knex-powered product API
+                         │
+                         ▼
+                    SQLite Database
+                         │
+               ┌─────────┴─────────┐
+               ▼                   ▼
+         Migrations            Seed Data
+```
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/Thiago771414/imagensProjetos/main/slices/mobile/restAPIversioningKnex.png" width="300">
+</p>
+
+---
+
+```text
+project-root/
+│
+├── app.js
+├── knexfile.js
+├── package.json
+│
+├── routes/
+│   ├── index.js
+│   ├── users.js
+│   ├── apiRouterV1.js
+│   └── apiRouterV2.js
+│
+├── db/
+│   ├── dev.sqlite3
+│   ├── migrations/
+│   └── seeds/
+│
+├── public/
+├── views/
+└── README.md
+```
+
+---
+
+# Key Features
+
+Express.js REST API
+
+API versioning (v1 and v2)
+
+CRUD operations for products
+
+SQLite persistence
+
+Knex query builder
+
+database migrations
+
+seed-based initial data loading
+
+transition from mock data to persistent storage
+
+---
+
+# Tech Stack
+
+Backend
+
+Node.js
+
+Express.js
+
+Database
+
+SQLite
+
+Database Access
+
+Knex
+
+Utilities
+
+Morgan
+
+Cookie Parser
+
+HTTP Errors
+
+---
+
+# API Versions
+
+Version 1 — In-Memory API
+
+This version stores products in a local JavaScript array.
+
+Endpoints:
+```text
+GET /api/v1/produtos
+
+GET /api/v1/produtos/:id
+
+POST /api/v1/produtos
+
+PUT /api/v1/produtos/:id
+
+DELETE /api/v1/produtos/:id
+```
+Version 2 — Knex + SQLite API
+
+This version uses SQLite and Knex for data persistence.
+
+Endpoints:
+
+```text
+GET /api/v2/produtos
+
+GET /api/v2/produtos/:id
+
+POST /api/v2/produtos
+
+PUT /api/v2/produtos/:id
+
+DELETE /api/v2/produtos/:id
+```
+---
+
+# How to Run
+
+1. Install dependencies:
+   
+```bash
+npm install
+```
+
+If needed:
+
+```bash
+npm install cookie-parser
 npm install knex sqlite3
-````
-Inicialize o Knex para criar o arquivo knexfile.js:
-````javascript
+```
+
+2. Initialize Knex:
+
+```bash
 npx knex init
-````
-Crie uma pasta chamada db no projeto para guardar tudo relacionado ao banco de dados.
-No arquivo knexfile.js, atualize o caminho do arquivo do banco de dados (filename) para a pasta db. Dentro da configuração development, o trecho ficará assim:
-````javascript
+```
+
+3. Configure the database
+
+Update knexfile.js to use SQLite inside the db folder:
+
+```Js
 development: {
   client: 'sqlite3',
   connection: {
     filename: './db/dev.sqlite3'
   },
-},
-````
-Vamos criar um banco de dados a partir de migrações do Knex. Crie uma nova pasta chamada migrations dentro da pasta db.
-Execute o comando para criar o primeiro arquivo de migração, responsável por criar a tabela "produtos":
-````javascript
-npx knex migrate:make tabela-produto
-````
-Abra o arquivo criado na pasta migrations (ele terá um nome com a data e o nome que você definiu na etapa anterior, como 20230731123456_tabela-produto.js) e adicione o código para a tabela de produtos:
-````javascript
+  useNullAsDefault: true,
+  migrations: {
+    directory: './db/migrations'
+  },
+  seeds: {
+    directory: './db/seeds'
+  }
+}
+```
+
+4. Run migrations
+
+```bash
+npx knex migrate:latest
+```
+
+5. Run seeds
+
+```bash
+npx knex seed:run
+```
+
+6. Start the server
+
+```bash
+npm start
+```
+or
+```bash
+node app.js
+```
+
+The application should be available at:
+
+```bash
+http://localhost:3000
+```
+
+# Database Setup
+Migration example
+
+```js
 exports.up = function(knex) {
   return knex.schema.createTable("produtos", tbl => {
     tbl.increments('id');
@@ -219,149 +289,92 @@ exports.up = function(knex) {
 exports.down = function(knex) {
   return knex.schema.dropTableIfExists('produtos');
 };
-````
-Execute a migração para criar a tabela de produtos no banco de dados:
-````javascript
-npx knex migrate:latest
-````
-## Carga Inicial com Seeds
-Agora, vamos configurar as seeds (dados iniciais) na pasta seeds. Crie a pasta seeds dentro da pasta db.
-No arquivo knexfile.js, abaixo da configuração das migrações, adicione a configuração para as seeds:
-````javascript
-seeds: {
-  directory: './db/seeds'
-},
-````
-Execute o comando para criar o arquivo de seed:
-````javascript
-npx knex seed:make carga-produto
-````
-Abra o arquivo criado na pasta seeds (ele terá um nome com a data e o nome que você definiu na etapa anterior, como 20230731123643_carga-produto.js) e substitua o código pelo seguinte:
-````javascript
+```
+# Seed example
+
+```js
 exports.seed = async function(knex) {
-  // Deletes ALL existing entries
   await knex('produtos').del();
-  // Inserts seed entries
+
   await knex('produtos').insert([
-    {"descricao": "camiseta", "marca": "Nike", "preco": 49.99},
-    {"descricao": "calça jeans", "marca": "Levi's", "preco": 89.95},
-    {"descricao": "tênis esportivo", "marca": "Adidas", "preco": 79.50},
-    {"descricao": "vestido floral", "marca": "Zara", "preco": 59.99},
-    {"descricao": "moletom com capuz", "marca": "Puma", "preco": 69.75},
-    {"descricao": "boné", "marca": "New Era", "preco": 29.99},
-    {"descricao": "bolsa de couro", "marca": "Michael Kors", "preco": 149.00},
-    {"descricao": "óculos de sol", "marca": "Ray-Ban", "preco": 119.50},
-    {"descricao": "shorts jeans", "marca": "Guess", "preco": 54.95},
-    {"descricao": "jaqueta de couro", "marca": "Harley Davidson", "preco": 199.99}
+    { "descricao": "camiseta", "marca": "Nike", "preco": 49.99 },
+    { "descricao": "calça jeans", "marca": "Levi's", "preco": 89.95 },
+    { "descricao": "tênis esportivo", "marca": "Adidas", "preco": 79.50 },
+    { "descricao": "vestido floral", "marca": "Zara", "preco": 59.99 },
+    { "descricao": "moletom com capuz", "marca": "Puma", "preco": 69.75 },
+    { "descricao": "boné", "marca": "New Era", "preco": 29.99 },
+    { "descricao": "bolsa de couro", "marca": "Michael Kors", "preco": 149.00 },
+    { "descricao": "óculos de sol", "marca": "Ray-Ban", "preco": 119.50 },
+    { "descricao": "shorts jeans", "marca": "Guess", "preco": 54.95 },
+    { "descricao": "jaqueta de couro", "marca": "Harley Davidson", "preco": 199.99 }
   ]);
 };
-````
-Execute a seed para inserir os dados na tabela:
-````javascript
-npx knex seed:run
-````
-## Atualização da API com Knex
-Crie uma nova versão da API, duplicando o arquivo apiRouterV1.js e renomeando-o para apiRouterV2.js.
-No novo arquivo apiRouterV2.js, atualize a importação do Knex e substitua a lógica dos endpoints para utilizar consultas ao banco de dados com o Knex:
-````javascript
-var express = require('express');
-var apiRouterV2 = express.Router();
+```
+# Example Request Flow
 
-const knex = require('knex')(require('../../knexfile').development)
+Version 1
 
-apiRouterV2.get('/produtos', function (req, res, next) {
-  knex('produtos')
-    .select('*')
-    .then(produtos => {
-      res.status(200).json(produtos);
-    })
-    .catch(err => res.status(500).json({ message: `Erro ao obter produtos: ${err.message}` }))
-});
+```text
+Request → Express Route → In-Memory Array → JSON Response
+```
 
-apiRouterV2.get('/produtos/:id', function (req, res, next) {
-  let id = req.params.id;
-  if (id) {
-    let idInt = Number.parseInt(id)
-    knex('produtos')
-      .select('*')
-      .where({ id: idInt })
-      .then(produtos => {
-        if (!produtos.length) {
-          res.status(404).json({ message: `Produto não encontrado` })
-          return
-        }
-        let produto = produtos[0]
-        res.status(200).json(produto)
-      })
-      .catch(err => res.status(500).json({ message: `Erro ao obter produtos: ${err.message}` }))
-  }
-  else res.status(404).json({ message: `Produto não encontrado` })
-});
+Version 2
 
-apiRouterV2.post('/produtos', function (req, res, next) {
-  let produto = req.body
-  knex('produtos')
-    .insert(produto, ['id'])
-    .then(produtos => {
-      if (!produtos.length) {
-        res.status(400).json({ message: `Erro ao inserir produto` })
-        return
-      }
-      else {
-        let id = produtos[0].id
-        res.status(201).json({ message: `Produto inserido com sucesso`, data: { id } })
-      }
-    })
-    .catch(err => res.status(500).json({ message: `Erro ao inserir produto: ${err.message}` }))
-});
+```text
+Request → Express Route → Knex Query → SQLite → JSON Response
+```
+---
 
-apiRouterV2.delete('/produtos/:id', function (req, res, next) {
-  let id = req.params.id;
-  if (id) {
-    let idInt = Number.parseInt(id)
-    knex('produtos')
-      .where({ id: idInt })
-      .del()
-      .then(result =>
-        res.status(200).json({ message: `Produto excluído com sucesso` })
-      )
-      .catch(err => res.status(500).json({ message: `Erro ao excluir produto: ${err.message}` }))
-  }
-  else {
-    res.status(404).json({ message: `Produto não encontrado` })
-  }
-});
+# What This Project Demonstrates
 
-apiRouterV2.put('/produtos/:id', function (req, res, next) {
-  let id = req.params.id;
-  let produto = req.body
-  if (id) {
-    let idInt = Number.parseInt(id)
-    knex('produtos')
-      .where({ id: idInt })
-      .update(produto)
-      .then(result => {
-        res.status(200).json({ message: `produto alterado com sucesso`, data: { produto: produtos[idx] } })
-      })
-      .catch(err => res.status(500).json({ message: `Erro ao excluir produto: ${err.message}` }))
-  }
-  else {
-    res.status(404).json({ message: `Produto não encontrado` })
-  }
-});
+This repository demonstrates practical knowledge of:
 
-module.exports = apiRouterV2;
-````
-No arquivo app.js, atualize a importação da nova versão da API:
-````javascript
-// ...
+Express routing
 
-var apiRouterV2 = require('./routes/apiRouterV2');
+RESTful API structure
 
-// ...
+CRUD design
 
-app.use('/api/v2', apiRouterV2);
+API versioning
 
-// ...
-````
-Agora sua API deve estar atualizada para usar o Knex como ORM e o banco de dados SQLite. Utilizando o Knex, você pode facilmente trabalhar com migrações, seeds e consultas ao banco de dados de maneira mais organizada e eficiente. Lembre-se de sempre realizar testes e validar os dados de entrada e saída para garantir o bom funcionamento da API.
+SQLite integration
+
+Knex query building
+
+migrations and seeds
+
+backend evolution from mock storage to persistent storage
+
+---
+
+Suggested Improvements
+
+For a more production-oriented version, the next steps could include:
+
+request validation with Joi or Zod
+
+service layer and repository layer
+
+centralized error handling
+
+environment variables with dotenv
+
+automated tests
+
+authentication and authorization
+
+Docker support
+
+Swagger / OpenAPI documentation
+
+---
+
+# Author
+
+Thiago Reis Lima
+Software Engineer
+
+LinkedIn:
+```bash
+https://www.linkedin.com/in/thiago-lima-2a5896166/
+```
