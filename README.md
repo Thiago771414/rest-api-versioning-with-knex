@@ -91,7 +91,7 @@ Express Application
 ```
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Thiago771414/imagensProjetos/main/slices/mobile/restAPIversioningKnex.png" width="300">
+  <img src="https://raw.githubusercontent.com/Thiago771414/imagensProjetos/main/slices/mobile/mermaid-diagram.png" width="300">
 </p>
 
 ---
